@@ -7,9 +7,13 @@ const mongoose = require("mongoose")
 const cors = require('cors'); 
  
 
-  mongoose.connect('mongodb://localhost:27017', {
-    serverSelectionTimeoutMS: 30000, // 30 seconds
-    socketTimeoutMS: 45000, // 45 seconds
+mongoose.connect('mongodb+srv://muneercr077:fest123@cluster0.ekh4tcm.mongodb.net/your-database-name?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Error connecting to MongoDB', err);
 });
 const AuthRoute = require("./routes/auth");  
 const CategoryRoute = require("./routes/category");  
@@ -45,8 +49,6 @@ app.use("/api",ThambolamRoute)
 app.use("/api",ShinkarimelamRoute)
 app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
-
-
 
 
 
