@@ -11,7 +11,6 @@ const cors = require('cors');
     serverSelectionTimeoutMS: 30000, // 30 seconds
     socketTimeoutMS: 45000, // 45 seconds
 });
-
 const AuthRoute = require("./routes/auth");  
 const CategoryRoute = require("./routes/category");  
 const BookingRoute = require("./routes/booking")
@@ -48,7 +47,7 @@ app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
 
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+
 
 
 
