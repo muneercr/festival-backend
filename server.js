@@ -15,7 +15,6 @@ mongoose.connect('mongodb+srv://muneercr077:fest123@cluster0.ekh4tcm.mongodb.net
 }).catch((err) => {
   console.error('Error connecting to MongoDB', err);
 });
-
 const AuthRoute = require("./routes/auth");  
 const CategoryRoute = require("./routes/category");  
 const BookingRoute = require("./routes/booking")
@@ -50,7 +49,7 @@ app.use("/api",ThambolamRoute)
 app.use("/api",ShinkarimelamRoute)
 app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
- 
+
 
 
 
