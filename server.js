@@ -19,6 +19,7 @@ const ElephantRoute =require("./routes/elephant")
 const BandsetRoute =require("./routes/bandset")
 const ThambolamRoute =require("./routes/thambolam")
 const ShinkarimelamRoute =require("./routes/shinkarimelam")
+const bookingRoute =require("./routes/programBooking")
 
 
 
@@ -43,6 +44,9 @@ app.use("/api",BandsetRoute)
 app.use("/api",ThambolamRoute)
 app.use("/api",ShinkarimelamRoute)
 app.use("/api",CategoryRoute)
+app.use("/api",bookingRoute)
+
+
 
 
 
