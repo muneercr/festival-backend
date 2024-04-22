@@ -32,12 +32,14 @@ const bookProgram = async (req, res) => {
         agrimentAmount: req.body.agrimentAmount,
         advance:req.body.advance,
         pendingAmount:req.body.pendingAmount,
+        committeeName:req.body.committeeName
 
     })
     console.log("bandset.bookings",bandset.bookings);
     bandset.bookings.push({
         start_date: req.body.bookedDates,
-        end_date: req.body.bookedDates // Assuming it's a single-day booking
+        end_date: req.body.bookedDates,
+        committeeName:req.body.committeeName
     });
     try {
         await program.save();
