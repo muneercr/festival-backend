@@ -4,6 +4,7 @@ const programSchema = mongoose.Schema({
     bookedDates: { type: String },
     bookingPrice:{ type: String, required:  false },
     bandsetName:{ type: String, required:  false },
+    committeeName:{ type: String, required:  false },
     timeStarting:{ type: String, required:  true },
     timeEnding:{ type: String, required:  true },
     food:{ type: String, required:  true },

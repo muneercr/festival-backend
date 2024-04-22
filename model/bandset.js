@@ -6,11 +6,8 @@ const bandsetSchema = mongoose.Schema({
     bntBookingPeriod:{ type: Number, required:  true },
     biddingDuedays:{ type: Number, required:  true },
     category: { type: String, required:  true }, 
-    bookings: [{ start_date: Date, end_date: Date }],
-    bandsetImages:{
-        data: Buffer,
-        contentType: String
-    },
+    bookings: [{ start_date: Date, end_date: Date,committeeName:String }],
+    bandsetImages: { type: String, required:  false }, 
 })
 
 const Bandset = mongoose.model("Bandset",bandsetSchema)
