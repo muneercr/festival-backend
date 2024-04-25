@@ -1,6 +1,29 @@
 const Program = require('../model/program');
 const Bandset =require("../model/bandset")
 
+
+const bandsetBidding = async (req,res) => {
+    const { id } =req.params
+    const bandset =await Bandset.findById(id) 
+    console.log("bandset",bandset);
+
+    bandset.bids.push({
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
+        biddingAmount:req.body.biddingAmount,
+        bidderName:req.body.bidderName,
+    });
+
+    try { 
+        await bandset.save();
+
+        res.json({ bandset });
+    } catch (error) {
+        console.error("Error booking program:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+
+}
 // Controller function to book a program by date
 const bookProgram = async (req, res) => {
     const { id } = req.params; // Program ID  
@@ -24,12 +47,11 @@ const bookProgram = async (req, res) => {
     let program = new Program({
         bookedDates:req.body.bookedDates,
         bookingPrice:bandset.bandsetPrice, 
-        bandsetName:bandset.bandsetName, 
-        bandsetImages:bandset.bandsetImages,  
+        bandsetName:bandset.bandsetName,   
         timeStarting: req.body.timeStarting,
         timeEnding: req.body.timeEnding,
         food: req.body.food,
-        agrimentAmount: req.body.agrimentAmount,
+        biddingAmount: req.body.biddingAmount,
         advance:req.body.advance,
         pendingAmount:req.body.pendingAmount,
         committeeName:req.body.committeeName
@@ -39,8 +61,9 @@ const bookProgram = async (req, res) => {
     bandset.bookings.push({
         start_date: req.body.bookedDates,
         end_date: req.body.bookedDates,
-        committeeName:req.body.committeeName
+        committeeName:req.body.committeeName,
     });
+    
     try {
         await program.save();
         await bandset.save();
@@ -97,4 +120,4 @@ const getByDate = async (req, res, next) => {
     }
 };
 
-module.exports = { bookProgram ,getAllBookingData,getByDate}
+module.exports = { bookProgram ,getAllBookingData,getByDate,bandsetBidding}

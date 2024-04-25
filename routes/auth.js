@@ -6,6 +6,7 @@ const adminAuthController = require("../controller/adminAuthController")
 
 router.post("/register" , authController.register);
 router.post("/login" , authController.Login);
+router.post("/userForget" , authController.resetPassword);
 router.get("/users" , authController.getAllUsers);
 router.put("/users/:id", authController.editUser); 
 router.delete("/users/:id", authController.deleteUser); 
