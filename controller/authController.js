@@ -1,14 +1,15 @@
 const User = require("../model/user")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const nodemailer = require('nodemailer'); 
+
 
 const register = (req, res, next) => {
     bcrypt.hash(req.body.password, 10, (err, hashedpass) => {
         let user = new User({
             name: req.body.name,
             email: req.body.email,
-            phone: req.body.phone,
-            designation:req.body.designation,
+            phone: req.body.phone, 
             password: hashedpass,
         });
         if (err) {
@@ -19,7 +20,8 @@ const register = (req, res, next) => {
             user.save()
                 .then((user) => {
                     res.json({
-                        user
+                        user,
+                        message:"registration success"
                     });
                 }) 
         }
@@ -40,6 +42,7 @@ const Login = (req,res,next) => {
                 let token = jwt.sign({name :user.name}, "secret", {expiresIn:"1000"})
                 res.json({
                     message:"loggin success",
+                    user,
                     token
                 })
                 }else{
@@ -144,7 +147,57 @@ const getAllUsers =async (req,res) => {
             });
         }
     };
+
+
+    const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // Use `true` for port 465, `false` for all other ports
+        auth: {
+          user: "keralafestivals.com",
+          pass: "fastival@12",
+        },
+      });
+
+// Generate a reset token
+const resetPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+      const token =jwt.sign({id : user._id},"jwt_secret_key",{expiresIn:"1d"})
+      console.log("token",token);
+
+        await user.save();
+
+        // Send email with reset token
+        const mailOptions = {
+            from: 'keralafastivals@gmail.com', // Your email address
+            to: email, // User's email address
+            subject: 'Password Reset', // Email subject
+            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n` +
+                  `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
+                  `http://localhost:3000/forgetPassword/${user._id}/${token}` +
+                  `If you did not request this, please ignore this email and your password will remain unchanged.\n`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error(error);
+                return res.status(500).json({ message: 'Failed to send reset token email' });
+            }
+            console.log('Email sent: ' + info.response);
+            res.json({ message: `Reset token sent to your email ${email? email :'no email get'}` });
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
         
     
  
-module.exports = { register,Login,getAllUsers,getUserById,deleteUser,editUser }
+module.exports = { register,Login,getAllUsers,getUserById,deleteUser,editUser,resetPassword }

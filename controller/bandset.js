@@ -1,10 +1,13 @@
 const Bandset = require("../model/bandset")
 
-const addBandset = (req,res,next) => {
+const addBandset = (req,res,next) => {  
+
+  const images =  req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename; 
+
     let bandset = new Bandset({
         bandsetName:req.body.bandsetName,
         bandsetPrice:req.body.bandsetPrice,
-        bandsetImages:req.body.bandsetImages,
+        bandsetImages:images,
         bntBookingPeriod:req.body.bntBookingPeriod,
         biddingDuedays:req.body.biddingDuedays,
         category:req.body.category,

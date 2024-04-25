@@ -5,7 +5,16 @@ const morgon = require("morgan");
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 const cors = require('cors'); 
+app.use(cors());
+
  
+
+//   mongoose.connect('mongodb://localhost:27017', {
+//     serverSelectionTimeoutMS: 30000, // 30 seconds
+//     socketTimeoutMS: 45000, // 45 seconds
+// });
+
+
 
 mongoose.connect('mongodb+srv://muneercr077:fest123@cluster0.ekh4tcm.mongodb.net/your-database-name?retryWrites=true&w=majority', {
   useNewUrlParser: true,
@@ -15,6 +24,8 @@ mongoose.connect('mongodb+srv://muneercr077:fest123@cluster0.ekh4tcm.mongodb.net
 }).catch((err) => {
   console.error('Error connecting to MongoDB', err);
 });
+
+
 const AuthRoute = require("./routes/auth");  
 const CategoryRoute = require("./routes/category");  
 const BookingRoute = require("./routes/booking")
@@ -51,12 +62,14 @@ app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
 
 
+ 
 
 
 
 
 
-app.use(cors());
+
+
 
 
 app.listen(5000, () => {
