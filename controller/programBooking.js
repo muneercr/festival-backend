@@ -7,12 +7,25 @@ const bandsetBidding = async (req,res) => {
     const bandset =await Bandset.findById(id) 
     console.log("bandset",bandset);
 
+    const currentDate = new Date();
+
+    const biddingDateTime = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}T${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}`;
+
+
+
     bandset.bids.push({
         start_date: req.body.start_date,
-        end_date: req.body.end_date,
+        end_date: req.body.start_date,
         biddingAmount:req.body.biddingAmount,
-        bidderName:req.body.bidderName,
+        bidderName:req.body.bidderName,  
+        biddingDateTime:biddingDateTime,
+        booking:req.body.booking,
+        bidAccepted:true
+
+        
     });
+
+    bandset.bids.sort((a, b) => b.biddingAmount - a.biddingAmount);
 
     try { 
         await bandset.save();
