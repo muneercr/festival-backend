@@ -63,6 +63,10 @@ app.use("/api",ShinkarimelamRoute)
 app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
 
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
+
 
   
 app.listen(process.env.PORT || 5000, () => {
