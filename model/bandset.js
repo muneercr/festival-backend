@@ -7,7 +7,8 @@ const bandsetSchema = mongoose.Schema({
     biddingDuedays:{ type: Number, required:  true },
     category: { type: String, required:  true }, 
     bookings: [{ start_date: Date, end_date: Date,committeeName:String }],
-    bids: [{ start_date: Date, end_date: Date,biddingAmount:String,bidderName:String }],  
+    bids: [{ start_date: Date, end_date: Date,biddingAmount:String,bidderName:String,
+            biddingDateTime:String,booking:String,biddingDateTime:String,bidAccepted:String }],  
     bandsetImages: { type: String, required:  false }, 
 })
 

@@ -6,24 +6,26 @@ const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 const cors = require('cors'); 
 app.use(cors());
+require('dotenv').config()
+ 
 
  
 
-  mongoose.connect('mongodb://localhost:27017', {
-    serverSelectionTimeoutMS: 30000, // 30 seconds
-    socketTimeoutMS: 45000, // 45 seconds
-});
-
-
-
-// mongoose.connect('mongodb+srv://muneercr077:fest123@cluster0.ekh4tcm.mongodb.net/your-database-name?retryWrites=true&w=majority', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// }).then(() => {
-//   console.log('Connected to MongoDB');
-// }).catch((err) => {
-//   console.error('Error connecting to MongoDB', err);
+//   mongoose.connect('mongodb://localhost:27017', {
+//     serverSelectionTimeoutMS: 30000, // 30 seconds
+//     socketTimeoutMS: 45000, // 45 seconds
 // });
+
+
+
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Error connecting to MongoDB', err);
+});
 
 
 const AuthRoute = require("./routes/auth");  
@@ -62,16 +64,7 @@ app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
 
 
- 
-
-
-
-
-app.get("/", (req, res) => res.send("Express on Vercel"));
-
-
-
-
-app.listen(5000, () => {
+  
+app.listen(process.env.PORT || 5000, () => {
   console.log("Server is running on port 5000");
 });
