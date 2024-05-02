@@ -28,39 +28,46 @@ const register = (req, res, next) => {
     });
 }
 
-const Login = (req,res,next) => {
-  
-    console.log("data",req.body);
-    var username = req.body.name
-    var password = req.body.password
-     
-    User.findOne({}).then(user => {
-         
-        if(user){
-        bcrypt.compare(password, user.password, (err,result) => {
-            if(result){
-                let token = jwt.sign({name :user.name}, "secret", {expiresIn:"1000"})
-                res.json({
-                    message:"loggin success",
-                    user,
-                    token
-                })
-                }else{
-                    res.json({
-                        message:"password not match"
-                    })
-               
-            }
-        })
-        }else{
-            res.json({
-                message:"user not exist"
-            })
-        }
+const Login = (req, res, next) => {
+    console.log("data", req.body);
+    const { email, password } = req.body; // 'identifier' can be either email or phone number
+
+    // Find the user by email or phone number
+    User.findOne({
+        $or: [{ email: email }, { phoneNumber: email }]
     })
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
 
+            // User found, compare passwords
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: "Internal Server Error" });
+                }
 
-}
+                if (result) {
+                    // Passwords match, generate JWT token
+                    const token = jwt.sign({ userId: user._id }, "secret", { expiresIn: "1h" });
+                    res.json({
+                        message: "Login successful",
+                        user,
+                        token
+                    });
+                } else {
+                    // Password incorrect
+                    res.status(401).json({ message: "Password incorrect" });
+                }
+            });
+        })
+        .catch(error => {
+            // Error handling
+            console.error("Error during login:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        });
+};
+
 
 const getAllUsers =async (req,res) => {
     const data = await User.find({}); 

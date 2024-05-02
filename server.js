@@ -6,26 +6,37 @@ const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 const cors = require('cors'); 
 app.use(cors());
-require('dotenv').config()
- 
-
- 
-
-//   mongoose.connect('mongodb://localhost:27017', {
-//     serverSelectionTimeoutMS: 30000, // 30 seconds
-//     socketTimeoutMS: 45000, // 45 seconds
-// });
-
-
-
-mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.error('Error connecting to MongoDB', err);
+require('dotenv').config() 
+const http = require('http');
+const server = http.createServer(app);
+// const io = require('./socket') 
+global.io = require('socket.io')(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
+  }
 });
+
+
+
+ 
+
+  mongoose.connect('mongodb://localhost:27017', {
+    serverSelectionTimeoutMS: 30000, // 30 seconds
+    socketTimeoutMS: 45000, // 45 seconds
+});
+
+
+
+// mongoose.connect(process.env.DATABASE_URL, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// }).then(() => {
+//   console.log('Connected to MongoDB');
+// }).catch((err) => {
+//   console.error('Error connecting to MongoDB', err);
+// });
 
 
 const AuthRoute = require("./routes/auth");  
@@ -63,12 +74,15 @@ app.use("/api",ShinkarimelamRoute)
 app.use("/api",CategoryRoute)
 app.use("/api",bookingRoute)
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+// Create HTTP server
+// const server = http.createServer(app);
 
 
-  
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server is running on port 5000");
-});
+
+
+
+server.listen(5000, () => console.log(`Listening on port ${process.env.PORT }`));
+// app.listen(process.env.PORT || 5000, () => {
+//   console.log("Server is running on port 5000");
+// });\
+module.exports = io

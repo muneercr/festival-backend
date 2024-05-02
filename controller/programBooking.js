@@ -1,16 +1,32 @@
 const Program = require('../model/program');
 const Bandset =require("../model/bandset")
+const io = global.io;
 
 
 const bandsetBidding = async (req,res) => {
+    io.on('connection', (socket) => { 
+       console.log('A user connected');
+       
+       socket.on('msg', (data) => {
+           console.log('messege from user',data);
+
+       });
+       socket.emit("welcome" , "thanks for your mshdd")
+     });
     const { id } =req.params
     const bandset =await Bandset.findById(id) 
     console.log("bandset",bandset);
+    
 
     const currentDate = new Date();
 
     const biddingDateTime = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}T${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}`;
+    const bidEndingDate = new Date();
+          bidEndingDate.setDate(bidEndingDate.getDate() + bandset?.biddingDuedays); // Add biddingDuedays days
+    const bidEndingDateTime = `${bidEndingDate.getFullYear()}-${(bidEndingDate.getMonth() + 1).toString().padStart(2, '0')}-${bidEndingDate.getDate().toString().padStart(2, '0')}T${bidEndingDate.getHours().toString().padStart(2, '0')}:${bidEndingDate.getMinutes().toString().padStart(2, '0')}`;
 
+
+console.log("bidEndingDateTime",bidEndingDateTime);
 
 
     bandset.bids.push({
@@ -19,7 +35,9 @@ const bandsetBidding = async (req,res) => {
         biddingAmount:req.body.biddingAmount,
         bidderName:req.body.bidderName,  
         biddingDateTime:biddingDateTime,
-        booking:req.body.booking,
+        bidEndingDateTime:bidEndingDateTime,
+        userId:req.body.userId,
+        booking:false,
         bidAccepted:true
 
         
