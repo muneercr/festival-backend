@@ -77,7 +77,9 @@ app.use("/api",bookingRoute)
 // Create HTTP server
 // const server = http.createServer(app);
 
-
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 
 
 
