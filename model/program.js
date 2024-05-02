@@ -8,7 +8,7 @@ const programSchema = mongoose.Schema({
     timeStarting:{ type: String, required:  true },
     timeEnding:{ type: String, required:  true },
     food:{ type: String, required:  true },
-    biddingAmount:{ type: String, required:  true },
+    // biddingAmount:{ type: String, required:  true },
     advance:{ type: String, required:  false },
     pendingAmount:{ type: String, required:  false },
 })
