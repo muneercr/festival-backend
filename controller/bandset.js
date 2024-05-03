@@ -2,7 +2,7 @@ const Bandset = require("../model/bandset")
 
 const addBandset = (req,res,next) => {  
 
-  const images =  req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename; 
+  const images =  req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
 
     let bandset = new Bandset({
         bandsetName:req.body.bandsetName,
@@ -50,14 +50,27 @@ const getBandsetById = async (req, res, next) => {
 
 // Edit bandset by ID
 const editBandset = async (req, res, next) => {
+    console.log("eq.file",req.file);
     const bandsetId = req.params.id;
-    const { bandsetName, bandsetPrice, bandsetImages,category,bntBookingPeriod,biddingDuedays } = req.body;
+    const { bandsetName, bandsetPrice, category, bntBookingPeriod, biddingDuedays } = req.body;
+    
     try {
-        const updatedBandset = await Bandset.findByIdAndUpdate(
+        let updatedBandset = { bandsetName, bandsetPrice, category, bntBookingPeriod, biddingDuedays };
+        
+        // Check if a new image file is provided
+        if (req.file) {
+            // Construct the image URL using the protocol, host, and filename
+            const imagePath = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
+            updatedBandset.bandsetImages = imagePath;
+        }
+
+        // Find and update the Bandset document
+        updatedBandset = await Bandset.findByIdAndUpdate(
             bandsetId,
-            { bandsetName, bandsetPrice, bandsetImages,category,bntBookingPeriod,biddingDuedays },
+            updatedBandset,
             { new: true } // To return the updated document
         );
+
         if (updatedBandset) {
             res.json(updatedBandset);
         } else {
@@ -66,7 +79,8 @@ const editBandset = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 // Delete bandset by ID
 const deleteBandset = async (req, res, next) => {

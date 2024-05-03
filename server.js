@@ -22,18 +22,18 @@ global.io = require('socket.io')(server, {
 
  
 
-//   mongoose.connect('mongodb://localhost:27017', {
-//     serverSelectionTimeoutMS: 30000, // 30 seconds
-//     socketTimeoutMS: 45000, // 45 seconds
-// });
+  mongoose.connect('mongodb://localhost:27017', {
+    serverSelectionTimeoutMS: 30000, // 30 seconds
+    socketTimeoutMS: 45000, // 45 seconds
+});
 
 
-mongoose
-  .connect(process.env.DATABASE_URL, { useNewUrlParser: true })
-  .catch((e) => {
-    console.log(e);
-    process.exit(0);
-  });
+// mongoose
+//   .connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+//   .catch((e) => {
+//     console.log(e);
+//     process.exit(0);
+//   });
 
 
 const AuthRoute = require("./routes/auth");  
